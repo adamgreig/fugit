@@ -1,4 +1,5 @@
 use crate::helpers::{self, Helpers};
+use crate::Rate;
 use core::cmp::Ordering;
 use core::convert;
 use core::ops;
@@ -244,6 +245,28 @@ macro_rules! impl_duration_for_integer {
                 }
             }
 
+            /// Const try into rate, checking for divide-by-zero.
+            ///
+            /// ```
+            /// # use fugit::*;
+            #[doc = concat!("let d1 = Rate::<", stringify!($i), ", 1, 1_00>::from_ticks(1);")]
+            #[doc = concat!("let d2: Option<Rate::<", stringify!($i), ", 1, 1_000>> = d1.const_try_into();")]
+            ///
+            /// assert_eq!(d2.unwrap().ticks(), 10);
+            /// ```
+            pub const fn try_into_rate<const O_NOM: u32, const O_DENOM: u32>(
+                self,
+            ) -> Option<Rate<$i, O_NOM, O_DENOM>> {
+                if self.ticks > 0 {
+                    Some(Rate::<$i, O_NOM, O_DENOM>::from_ticks(
+                        Helpers::<NOM, DENOM, O_NOM, O_DENOM>::RATE_TO_DURATION_NUMERATOR as $i
+                        / self.ticks
+                    ))
+                } else {
+                    None
+                }
+            }
+
             /// Convert between bases for a duration.
             ///
             /// Unfortunately not a `From` impl due to collision with the std lib.
@@ -269,6 +292,17 @@ macro_rules! impl_duration_for_integer {
                     v
                 } else {
                     panic!("Convert failed!");
+                }
+            }
+
+            /// Convert from duration to rate.
+            pub const fn into_rate<const O_NOM: u32, const O_DENOM: u32>(
+                self,
+            ) -> Rate<$i, O_NOM, O_DENOM> {
+                if let Some(v) = self.try_into_rate() {
+                    v
+                } else {
+                    panic!("Into rate failed, divide-by-zero!");
                 }
             }
 
