@@ -81,22 +81,22 @@ pub type HertzU32 = Rate<u32, 1, 1>;
 pub type HertzU64 = Rate<u64, 1, 1>;
 
 /// Alias for kilohertz rate
-pub type Kilohertz<T> = Rate<T, 60, 1>;
+pub type Kilohertz<T> = Rate<T, 1_000, 1>;
 
 /// Alias for kilohertz rate (`u32` backing storage)
-pub type KilohertzU32 = Rate<u32, 60, 1>;
+pub type KilohertzU32 = Rate<u32, 1_000, 1>;
 
 /// Alias for kilohertz rate (`u64` backing storage)
-pub type KilohertzU64 = Rate<u64, 60, 1>;
+pub type KilohertzU64 = Rate<u64, 1_000, 1>;
 
 /// Alias for megahertz rate
-pub type Megahertz<T> = Rate<T, 3_600, 1>;
+pub type Megahertz<T> = Rate<T, 1_000_000, 1>;
 
 /// Alias for megahertz rate (`u32` backing storage)
-pub type MegahertzU32 = Rate<u32, 3_600, 1>;
+pub type MegahertzU32 = Rate<u32, 1_000_000, 1>;
 
 /// Alias for megahertz rate (`u64` backing storage)
-pub type MegahertzU64 = Rate<u64, 3_600, 1>;
+pub type MegahertzU64 = Rate<u64, 1_000_000, 1>;
 
 /// Alias for rate that come from timers with a specific frequency
 pub type TimerRate<T, const FREQ_HZ: u32> = Rate<T, FREQ_HZ, 1>;
